@@ -1,32 +1,27 @@
+import Link from "next/link";
 
-const Navigation = () => {
+const navData = [
+    { label: 'Estudios', href: 'studios', icon: 'home' },
+    { label: 'Directores', href: 'directors', icon: 'users' },
+    { label: 'Convocatorias', href: 'works', icon: 'briefcase' },
+    { label: 'Nominas', href: 'payroll', icon: 'doc-text' },
+    { label: 'Tarifas', href: 'rates', icon: 'credit-card' }
+]
+
+const Navigation = ({ section }) => {
     return (
         <nav className="nav-group">
             <h5 className="nav-group-title">Navegación</h5>
-            <a className="nav-group-item active">
-                <span className="icon icon-home"></span>
-                Estudios
-            </a>
-            <span className="nav-group-item">
-                <span className="icon icon-download"></span>
-                Directores
-            </span>
-            <span className="nav-group-item">
-                <span className="icon icon-folder"></span>
-                Convocatorias
-            </span>
-            <span className="nav-group-item">
-                <span className="icon icon-signal"></span>
-                Takes
-            </span>
-            <span className="nav-group-item">
-                <span className="icon icon-print"></span>
-                Nominas
-            </span>
-            <span className="nav-group-item">
-                <span className="icon icon-cloud"></span>
-                Calendario
-            </span>
+            {
+                navData.map(item =>
+                    <div key={item.href} className={`nav-group-item ${section === item.href ? ' active' : ''}`}>
+                        <span className={"icon icon-" + item.icon}></span>
+                        <Link href={`/${item.href}`}>
+                            <a>{item.label}</a>
+                        </Link>
+                    </div>
+                )
+            }
         </nav>
     )
 }
