@@ -1,6 +1,6 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: com.marctorrents.voice-works-control
+productName: Voice Works Control
+copyright: Copyright © 2020 Marc Torrents
 directories:
   output: dist
   buildResources: resources
