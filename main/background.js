@@ -1,9 +1,21 @@
-import { app, ipcMain } from 'electron';
-import serve from 'electron-serve';
-import * as Store from 'electron-store';
-import { createWindow } from './helpers';
+import { app, ipcMain } from 'electron'
+import serve from 'electron-serve'
+import * as Store from 'electron-store'
+import { createWindow } from './helpers'
 
-const isProd = process.env.NODE_ENV === 'production';
+// DB
+import StudioDB from '../db/stores/studio'
+import WorkDB from '../db/stores/work'
+import RateDB from '../db/stores/rate'
+import DirectorDB from '../db/stores/director'
+
+global.studioDB = StudioDB
+global.workDB = WorkDB
+global.rateDB = RateDB
+global.directorDB = DirectorDB
+
+
+const isProd = process.env.NODE_ENV === 'production'
 
 if (isProd) {
   serve({ directory: 'app' });
