@@ -11,8 +11,13 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "ajv": "^6.12.3",
+    "chart.js": "^2.9.3",
     "electron-serve": "^1.0.0",
-    "electron-store": "^5.2.0"
+    "electron-store": "^5.2.0",
+    "moment": "^2.27.0",
+    "nedb-promises": "^4.0.4",
+    "react-chartjs-2": "^2.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -21,8 +26,10 @@
     "electron-builder": "^22.7.0",
     "next": "^9.4.4",
     "nextron": "^5.15.0",
+    "postcss-preset-env": "^6.7.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "tailwindcss": "^1.6.2",
     "webpack": "^4.43.0"
   }
 }
