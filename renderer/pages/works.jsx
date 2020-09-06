@@ -1,5 +1,5 @@
 import Layout from '../components/layout/Layout'
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import useDB from '../hooks/useDB'
 import useCtxMenu from '../hooks/useCtxMenu'
 import useSectionToggler from '../hooks/useSectionToggler';
@@ -8,20 +8,10 @@ import AddWork from '../components/works/AddWork';
 import { useState, useEffect } from 'react';
 import WorksTalbe from '../components/works/WorksTable';
 
-let initialWork = {
-    product: '',
-    amounts_rates: [],
-    date: new Date().toLocaleDateString(),
-    studio: '',
-    director: ''
-}
-
 const Works = () => {
 
     let { section, setSection } = useSectionToggler()
-    let { data, create, setData, sectionData } = useDB('workDB', section)
-
-    let [newWork, setNewWork] = useState(initialWork)
+    let { data, create, setData, sectionData, getNewData } = useDB('workDB', section)
 
     // DB
     let [studios, setStudios] = useState({ db: null, docs: [] })
@@ -33,18 +23,9 @@ const Works = () => {
         setDocs({ ...state, docs })
     }
 
-    let onSubmit = (e) => {
-        e.preventDefault()
-        create(newWork)
-        setNewWork(initialWork)
-    }
-
-    useEffect(() => {
-        setSection('add-work')
-    }, [])
-
     // Get DB instances
     useEffect(() => {
+        setSection('add-work')
         let studioDB, rateDB, directorDB;
         studioDB = remote.getGlobal('studioDB')
         rateDB = remote.getGlobal('rateDB')
@@ -52,6 +33,9 @@ const Works = () => {
         setStudios({ ...studios, db: studioDB })
         setRates({ ...rates, db: rateDB })
         setDirectors({ ...directors, db: directorDB })
+
+        ipcRenderer.on('work-change', (e, p) => getNewData())
+        return () => ipcRenderer.removeListener('work-change', () => { })
     }, [])
 
     // Get studios from DB
@@ -81,14 +65,10 @@ const Works = () => {
                     {
                         section === 'add-work' &&
                         <AddWork
-                            onSubmit={onSubmit}
-                            newWork={newWork}
-                            setNewWork={setNewWork}
                             studios={studios}
-                            setStudios={setStudios}
                             rates={rates}
-                            setRates={setRates}
-                            directors={directors.docs} />
+                            directors={directors.docs}
+                            create={create} />
                     }
                     {
                         section === 'see-works' &&
