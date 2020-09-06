@@ -1,33 +1,37 @@
 import { useState, useEffect } from "react";
-import { remote } from "electron";
 
-let initialWork = {
-    product: '',
-    amounts_rates: [],
-    date: new Date().toLocaleDateString(),
-    studio: '',
-    director: ''
-}
+const AddWork = ({ create, studios, rates, directors }) => {
 
-const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, setRates, directors }) => {
-
-    let { product, amounts_rates, date, studio, director } = newWork;
+    let [newWork, setNewWork] = useState({
+        product: '',
+        amounts_rates: null,
+        date: new Date().toLocaleDateString(),
+        studio: '',
+        director: ''
+    })
     let [actualRate, setActualRate] = useState({ rate: '', amount: 0 })
 
     // Push rates
     let addRates = () => {
         if (actualRate.rate && actualRate.amount > 0) {
-            let currentRates = amounts_rates
+            let currentRates = newWork.amounts_rates || []
             currentRates.push(actualRate)
             setNewWork({ ...newWork, amounts_rates: currentRates })
             setActualRate({ rate: '', amount: 0 })
         }
     }
 
-    useEffect(() => {
-        setNewWork(initialWork)
-        return () => setNewWork(initialWork)
-    }, [])
+    let onSubmit = (e) => {
+        e.preventDefault()
+        create(newWork)
+        setNewWork({
+            product: '',
+            amounts_rates: null,
+            date: new Date().toLocaleDateString(),
+            studio: '',
+            director: ''
+        })
+    }
 
     return (
         <div className="container pb-5">
@@ -41,7 +45,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                         type="text"
                         className="form-control"
                         placeholder="Producto"
-                        value={product}
+                        value={newWork.product}
                         onChange={e => setNewWork({ ...newWork, product: e.target.value })} />
                 </div>
                 <div className="form-group">
@@ -49,7 +53,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                     <select
                         className="form-control"
                         onChange={e => setNewWork({ ...newWork, studio: e.target.value })}>
-                        <option selected="selected">Selecciona un estudio</option>
+                        <option defaultValue="Sin estudio">Selecciona un estudio</option>
                         {
                             studios.docs.map(studio =>
                                 <option key={studio._id} value={studio._id} >{studio.name}</option>
@@ -62,7 +66,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                     <select
                         className="form-control"
                         onChange={e => setNewWork({ ...newWork, director: e.target.value })}>
-                        <option selected="selected">Selecciona un estudio</option>
+                        <option defaultValue="Sin director">Selecciona un director</option>
                         {
                             directors.map(director =>
                                 <option key={director._id} value={director._id} >{director.name}</option>
@@ -75,7 +79,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                     <input
                         className="form-control"
                         type="date"
-                        value={date}
+                        value={newWork.date}
                         onChange={e => setNewWork({ ...newWork, date: e.target.value })} />
                 </div>
                 <label>Seleccionar tarifa</label>
@@ -86,7 +90,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                                 className="form-control"
                                 onChange={e => setActualRate({ ...actualRate, rate: e.target.value })}
                                 value={actualRate.rate}>
-                                <option selected="selected">Selecciona una tarifa</option>
+                                <option defaultValue="Selecciona una tarifa">Selecciona una tarifa</option>
                                 {
                                     rates.docs.map(rate =>
                                         <option key={rate._id} value={rate._id} >{rate.name}</option>
@@ -109,7 +113,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                     </div>
                 </div>
                 {
-                    amounts_rates.length > 0 &&
+                    newWork.amounts_rates &&
                     <table className="table-striped">
                         <thead>
                             <tr>
@@ -119,7 +123,7 @@ const AddWork = ({ onSubmit, setNewWork, newWork, studios, setStudios, rates, se
                         </thead>
                         <tbody>
                             {
-                                amounts_rates.map(rate =>
+                                (newWork.amounts_rates || []).map(rate =>
                                     <tr key={rate.rate}>
                                         <td>{rates.docs.filter((rt) => rt._id === rate.rate)[0]?.name}</td>
                                         <td>{rate.amount}</td>
