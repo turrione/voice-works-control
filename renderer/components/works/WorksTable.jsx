@@ -1,6 +1,8 @@
-const WorksTalbe = ({ works, studios, rates, directors }) => {
-    return (
+import { editWindow } from "../../events/windowEvents"
 
+const WorksTalbe = ({ works, studios, rates, directors }) => {
+
+    return (
         <div className="pane padded-bottom-more">
             <table className="table-striped">
                 <thead>
@@ -16,7 +18,7 @@ const WorksTalbe = ({ works, studios, rates, directors }) => {
                 <tbody>
                     {
                         works.map(work =>
-                            <tr key={work._id}>
+                            <tr key={work._id} onClick={() => editWindow(work._id)}>
                                 <td className="text-center">{studios.filter(studio => studio._id === work.studio)[0]?.name}</td>
                                 <td className="text-center">{work.product}</td>
                                 <td className="text-center">
@@ -25,7 +27,7 @@ const WorksTalbe = ({ works, studios, rates, directors }) => {
 
                                 <td className="text-center">
                                     {
-                                        work.amounts_rates.map((rate, i) =>
+                                        (work.amounts_rates || []).map((rate, i) =>
                                             <div key={rate.rate}>
                                                 <span>{rates.filter(rt => rt._id === rate.rate)[0].name}</span>
                                                 {work.amounts_rates.length > i + 1 && <hr></hr>}
@@ -36,7 +38,7 @@ const WorksTalbe = ({ works, studios, rates, directors }) => {
 
                                 <td className="text-center">
                                     {
-                                        work.amounts_rates.map((rate, i) =>
+                                        (work.amounts_rates || []).map((rate, i) =>
                                             <div key={rate.amount}>
                                                 <span>{rate.amount}</span>
                                                 {work.amounts_rates.length > i + 1 && <hr></hr>}
