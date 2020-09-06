@@ -44,9 +44,9 @@ class RateStore {
     //     return this.db.find({isDone: false}).exec();
     // }
 
-    // archive({_id}) {
-    //     return this.db.update({_id}, {$set: {isDone: true}})
-    // }
+    archive(_id, update) {
+        return this.db.update({ _id }, { $set: { ...update } })
+    }
 }
 
 module.exports = new RateStore();
