@@ -48,9 +48,10 @@ class WorksStore {
         return this.db.find({ director })
     }
 
-    // archive({_id}) {
-    //     return this.db.update({_id}, {$set: {isDone: true}})
-    // }
+    async archive(_id, update) {
+        console.log('updating => ', _id, { ...update })
+        return this.db.update({ _id }, { ...update })
+    }
 }
 
 module.exports = new WorksStore();
