@@ -37,7 +37,7 @@ const WorksTable = ({ works }) => {
                             <tr key={work._id}>
                                 <td className="text-center">{work.product}</td>
                                 <td className="text-center">
-                                    <GetName id={work.director} dbName="directorDB" />
+                                    {work.director && <GetName id={work.director} dbName="directorDB" />}
                                 </td>
 
                                 <td className="text-center">
