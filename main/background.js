@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app, ipcMain, ipcRenderer } from 'electron'
 import serve from 'electron-serve'
 import * as Store from 'electron-store'
 import { createWindow } from './helpers'
@@ -14,6 +14,7 @@ global.workDB = WorkDB
 global.rateDB = RateDB
 global.directorDB = DirectorDB
 
+global.mainWindow
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -26,17 +27,17 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  const mainWindow = createWindow('main', {
+  global.mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
   });
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
+    await global.mainWindow.loadURL('app://./home.html');
   } else {
     const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
-    mainWindow.webContents.openDevTools();
+    await global.mainWindow.loadURL(`http://localhost:${port}/home`);
+    global.mainWindow.webContents.openDevTools();
   }
 })();
 
@@ -45,6 +46,11 @@ app.on('window-all-closed', () => {
 });
 
 const store = new Store({ name: 'messages' });
+
+ipcMain.on('works-change', (event, arg) => {
+  console.log('works change')
+  global.mainWindow.webContents.send('work-change')
+});
 
 ipcMain.on('get-messages', (event, arg) => {
   event.returnValue = store.get('messages') || [];
