@@ -15,6 +15,11 @@ function useDB(dbName, section) {
         setData(newData)
     }
 
+    let getNewData = async () => {
+        let newData = await dbInstance.readAll()
+        setData(newData)
+    }
+
     let getDetails = async (id) => {
         let doc = await dbInstance.read(id)
         setSectionData(doc)
@@ -45,6 +50,7 @@ function useDB(dbName, section) {
         data,
         create,
         setData,
+        getNewData,
         sectionData
     };
 }
