@@ -23,7 +23,7 @@ const AddWork = ({ create, studios, rates, directors }) => {
 
     let onSubmit = (e) => {
         e.preventDefault()
-        create(newWork)
+        create(newWork, 'workDB')
         setNewWork({
             product: '',
             amounts_rates: null,
@@ -55,7 +55,7 @@ const AddWork = ({ create, studios, rates, directors }) => {
                         onChange={e => setNewWork({ ...newWork, studio: e.target.value })}>
                         <option defaultValue="Sin estudio">Selecciona un estudio</option>
                         {
-                            studios.docs.map(studio =>
+                            studios.map(studio =>
                                 <option key={studio._id} value={studio._id} >{studio.name}</option>
                             )
                         }
@@ -92,7 +92,7 @@ const AddWork = ({ create, studios, rates, directors }) => {
                                 value={actualRate.rate}>
                                 <option defaultValue="Selecciona una tarifa">Selecciona una tarifa</option>
                                 {
-                                    rates.docs.map(rate =>
+                                    rates.map(rate =>
                                         <option key={rate._id} value={rate._id} >{rate.name}</option>
                                     )
                                 }
@@ -125,7 +125,7 @@ const AddWork = ({ create, studios, rates, directors }) => {
                             {
                                 (newWork.amounts_rates || []).map(rate =>
                                     <tr key={rate.rate}>
-                                        <td>{rates.docs.filter((rt) => rt._id === rate.rate)[0]?.name}</td>
+                                        <td>{rates.filter((rt) => rt._id === rate.rate)[0]?.name}</td>
                                         <td>{rate.amount}</td>
                                     </tr>
                                 )
