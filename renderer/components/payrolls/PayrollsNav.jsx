@@ -1,8 +1,3 @@
-const worksNav = [
-    { label: 'Añadir convocatoria', icon: 'plus-circled', section: 'add-work' },
-    { label: 'Ver convocatorias', icon: 'eye', section: 'see-works' },
-]
-
 const PayrollsNav = ({ months, section, setSection }) => {
 
     return (
